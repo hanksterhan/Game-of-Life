@@ -1,4 +1,4 @@
-import thread, sys
+import thread, sys, os, time
 import numpy as np
 
 # this function parses the command line, making sure all the command line arguments are right
@@ -156,7 +156,6 @@ def simulate(game_board, numRows, numCols, row, col):
         neighbors.append(game_board[row-1][col])
         neighbors.append(game_board[row][col])
         neighbors.append(game_board[row+1][col])
-
     #Not on a wall case
     else:
         #top
@@ -179,13 +178,14 @@ def simulate(game_board, numRows, numCols, row, col):
         elif neighbors.count(1) >4:
             return 0
     else:
-        if neighbors.count(0) is 3:
+        if neighbors.count(1) is 3:
             return 1
     #If the cell wasn't affected by the neighbors, just return
     return current_status
 
 def main():
     cmdLineArgs = parseCommandLine()
+
     file = open(cmdLineArgs[1], "r")
     numRows = int(file.readline())
     numCols = int(file.readline())
@@ -198,12 +198,18 @@ def main():
         line = line.split()
         game_board[int(line[0])][int(line[1])] = 1
 
-    for r in range(numRows):
-        for c in range(numCols):
-            game_board_2[r][c] = simulate(game_board, numRows, numCols, r, c)
-    for r in range(numRows):
-        for c in range(numCols):
-            game_board[r][c] = game_board_2[r][c]
+    for iterations in range(numIterations):
+        for r in range(numRows):
+            for c in range(numCols):
+                game_board_2[r][c] = simulate(game_board, numRows, numCols, r, c)
+        for r in range(numRows):
+            for c in range(numCols):
+                game_board[r][c] = game_board_2[r][c]
+        if int(cmdLineArgs[2]) is 1:
+            print np.matrix(game_board)
+            usleep = lambda x: time.sleep(x/1000000.0)
+            usleep(100000)
+            os.system('cls')
     print np.matrix(game_board)
     file.close()
 main()
