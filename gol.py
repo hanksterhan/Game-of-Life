@@ -1,4 +1,5 @@
 import thread, sys
+import numpy as np
 
 # this function parses the command line, making sure all the command line arguments are right
 # returns a list containing the file name, printFlag, number of threads, rowColFlag, and printConfigFlag
@@ -34,11 +35,22 @@ def parseCommandLine():
         print "1 will print the partitioning information. "
         sys.stdout.flush() # python equivalent to fflush(stdout) in C
         sys.exit(0)
-    cmdLineArgs.append(sys.argv[:])
+    cmdLineArgs = sys.argv
     return cmdLineArgs
 
 def main():
     cmdLineArgs = parseCommandLine()
-    print cmdLineArgs
+    file = open(cmdLineArgs[1], "r")
+    numRows = int(file.readline())
+    numCols = int(file.readline())
+    numIterations = int(file.readline())
+    numAlive = file.readline()
 
+    game_board = [[0 for x in range(numRows)] for y in range(numCols)]
+    for line in file:
+        line = line.split()
+        game_board[int(line[0])][int(line[1])] = 1
+    
+    print np.matrix(game_board)
+    file.close()
 main()
