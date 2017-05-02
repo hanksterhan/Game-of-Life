@@ -38,6 +38,17 @@ def parseCommandLine():
     cmdLineArgs = sys.argv
     return cmdLineArgs
 
+def printTable(game_board, numRows, numCols):
+    for r in range(numRows):
+        s = ''
+        for c in range(numCols):
+            if game_board[r][c] is 1:
+                s += '@'
+            else:
+                s += '-'
+        print s
+
+
 #This function takes a 2D array and checks to see which cells should be alive and which cells should be dead
 #The function also takes the number of rows, the number of columns, and the row and column of the cell to check.
 #returns 0 if the cell is dead, 1 if the cell is alive, and 2 if the is an error
@@ -192,8 +203,11 @@ def main():
     numIterations = int(file.readline())
     numAlive = file.readline()
 
-    game_board = [[0 for x in range(numRows)] for y in range(numCols)]
-    game_board_2 = [[0 for x in range(numRows)] for y in range(numCols)]
+    #start time
+    start_time = time.time()
+
+    game_board = [[0 for x in range(numCols)] for y in range(numRows)]
+    game_board_2 = [[0 for x in range(numCols)] for y in range(numRows)]
     for line in file:
         line = line.split()
         game_board[int(line[0])][int(line[1])] = 1
@@ -206,10 +220,11 @@ def main():
             for c in range(numCols):
                 game_board[r][c] = game_board_2[r][c]
         if int(cmdLineArgs[2]) is 1:
-            print np.matrix(game_board)
+            os.system('cls')
+            # print np.matrix(game_board)
+            printTable(game_board, numRows, numCols)
             usleep = lambda x: time.sleep(x/1000000.0)
             usleep(100000)
-            os.system('cls')
-    print np.matrix(game_board)
+    print "A game board with {0} rows x {1} columns after {2} iterations took {3} seconds to execute".format(numRows,numCols,numIterations,(time.time()-start_time))
     file.close()
 main()
