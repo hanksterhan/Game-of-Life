@@ -51,7 +51,7 @@ def printTable(game_board, numRows, numCols):
 
 #This function takes a 2D array and checks to see which cells should be alive and which cells should be dead
 #The function also takes the number of rows, the number of columns, and the row and column of the cell to check.
-#returns 0 if the cell is dead, 1 if the cell is alive, and 2 if the is an error
+#returns 0 if the cell is dead, 1 if the cell is alive, and 2 if there is an error
 def simulate(game_board, numRows, numCols, row, col):
     neighbors = []
     current_status = game_board[row][col]
@@ -80,8 +80,8 @@ def simulate(game_board, numRows, numCols, row, col):
         neighbors.append(game_board[numRows-1][numCols-2])
         neighbors.append(game_board[numRows-1][numCols-1])
         #the rest
-        neighbors.append(game_board[row][numCols-2])
-        neighbors.append(game_board[row+1][numCols-2])
+        neighbors.append(game_board[0][numCols-2])
+        neighbors.append(game_board[1][numCols-2])
         neighbors.append(game_board[1][numCols-1])
     #Bottom right case
     elif row is (numRows-1) and col is (numCols-1):
@@ -162,11 +162,11 @@ def simulate(game_board, numRows, numCols, row, col):
         neighbors.append(game_board[row][col+1])
         neighbors.append(game_board[row+1][col+1])
         #Bottom
-        neighbors.append(game_board[row+1][col+1])
-        #left
-        neighbors.append(game_board[row-1][col])
-        neighbors.append(game_board[row][col])
         neighbors.append(game_board[row+1][col])
+        #left
+        neighbors.append(game_board[row-1][numCols-1])
+        neighbors.append(game_board[row][numCols-1])
+        neighbors.append(game_board[row+1][numCols-1])
     #Not on a wall case
     else:
         #top
@@ -186,7 +186,7 @@ def simulate(game_board, numRows, numCols, row, col):
         if neighbors.count(1) in [0,1]:
             return 0
         #dies from overpopulation
-        elif neighbors.count(1) >4:
+        elif neighbors.count(1) > 3:
             return 0
     else:
         if neighbors.count(1) is 3:
