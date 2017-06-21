@@ -1,5 +1,11 @@
 import thread, sys, os, time
 import numpy as np
+from struct import *
+
+#Global variables
+round_processed = 0
+total_processed = 0
+
 
 # this function parses the command line, making sure all the command line arguments are right
 # returns a list containing the file name, printFlag, number of threads, rowColFlag, and printConfigFlag
@@ -203,14 +209,18 @@ def main():
     numIterations = int(file.readline())
     numAlive = file.readline()
 
-    #start time
-    start_time = time.time()
 
+    #Set up the game boards
     game_board = [[0 for x in range(numCols)] for y in range(numRows)]
     game_board_2 = [[0 for x in range(numCols)] for y in range(numRows)]
     for line in file:
         line = line.split()
         game_board[int(line[0])][int(line[1])] = 1
+
+    #start time
+    start_time = time.time()
+    thread.start_new_thread(threadfunc, args)
+
 
     for iterations in range(numIterations):
         for r in range(numRows):
